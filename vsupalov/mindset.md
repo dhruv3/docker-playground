@@ -28,4 +28,16 @@
 # 6 Docker Basics You Should Completely Grasp When Getting Started
 * Containers:
   * Containers start faster and have less resource overhead compared to VMs.
-  
+* Images:
+  * An image, is a blueprint from which an arbitrary number of brand-new containers can be started.
+  * It’s like a powered down computer (with software installed), which is ready to be executed with a single command. Only instead of starting the computer, you create a new one from scratch (container) which looks exactly like the one you chose (image).
+* Dockerfiles:
+  * A Dockerfile is a set of precise instructions, stating how to create a new Docker image, setting defaults for containers being run based on it and a bit more.
+* Volumes:
+  * When starting a Docker container, you can specify that certain directories are mount points for either local directories (of the host machine), or for **volumes**.
+  * You can create a volume, Docker makes sure that it’s there and saved somewhere on the host system.
+  * When a container exits, the volumes it was using stick around.
+* Port Forwarding:
+  * By default, a container is not accessible by other containers, nor from the outside world. However, you can tell Docker to expose a container port to a port of the host machine.
+* Docker Compose:
+  * Ability to run complex commands in an easy way.
