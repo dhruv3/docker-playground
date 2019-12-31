@@ -50,4 +50,13 @@ docker container logs mydb
 ```bash
 docker container top mydb
 ```
-* 
+* `docker container exec` allows you to run a command inside a container.
+```bash
+ docker exec -it mydb \
+ mysql --user=root --password=$MYSQL_ROOT_PASSWORD --version
+ ```
+ * You can also use `docker container exec` to connect to a new shell process inside an already-running container. Executing the command below will give you an interactive shell (`sh`) inside your MySQL container.
+ ```bash
+ docker exec -it mydb sh
+ ```
+ 
