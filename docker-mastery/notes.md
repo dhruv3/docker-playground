@@ -71,8 +71,21 @@ docker run -it --rm --net=dns-rr centos curl -s search:9200
 * Images are made up of file system changes and metadata
 * Each layer is uniquely identified and only stored once on a host.
 * A Docker image is built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile.
-* Detailed description of Image and Layers: [link](https://docs.docker.com/v17.09/engine/userguide/storagedriver/imagesandcontainers/)
+* Detailed description of Image and Layers. **COPY ON WRITE**: [link](https://docs.docker.com/v17.09/engine/userguide/storagedriver/imagesandcontainers/)
 * Each line in dockerfile is a layer and order matters. 
 * It is read from a top-down manner.
 * Try to ensure that things that change the most are placed on bottom of your dockerfile and least changed stuff is on top of the file.
 * Docker caches your build steps. It generates a hash after every step in Dockerfile. If the file has not changed then it'll use the existing cached layer.
+
+# Section 5: Docker Volumes
+* Your goal is to design such that when you make a change you redeploy a container and don't update the older one.
+* This is a design goal. it's called "immutable infra".
+* In order to ensure this you have to keep unique data out of your container. 
+* Persistant data: Volumes and Bind Mounts
+* Docker has a UFS(Union File System).
+* Creating named volumes to keep a track that which volume belongs to which container.
+ ```bash
+ docker container run .... -v mysql-db:/var/lib/mysql
+ ```
+* This will create a named vol called "mysql-db"
+* `Bind Mounting`: Maps a host file or directory to a container file or directory. Can't use it in Dockerfile. Can be used in `docker run`(as it's on host we cannot use the Dockerfile). 
