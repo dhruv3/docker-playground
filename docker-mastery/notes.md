@@ -89,3 +89,12 @@ docker run -it --rm --net=dns-rr centos curl -s search:9200
  ```
 * This will create a named vol called "mysql-db"
 * `Bind Mounting`: Maps a host file or directory to a container file or directory. Can't use it in Dockerfile. Can be used in `docker run`(as it's on host we cannot use the Dockerfile). 
+
+# Section 6: Docker Compose
+* Comprised of 2 things: `YAML` and `docker-compose`
+* There are three main section in YAML file: services, volumes and networks.
+* Services are actually containers. They are called services as you can come up with multiple running versions of a single container.
+```bash
+docker-compose up # setup volumes/networks and start all containers
+docker-compose down # stop all containers and remove cont/vol/net
+```
