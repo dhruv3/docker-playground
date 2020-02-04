@@ -55,3 +55,24 @@ docker run -it --rm --net=dns-rr alpine nslookup search
 docker run -it --rm --net=dns-rr centos curl -s search:9200
 ```
 * Solution for DNS Round Robin Test
+
+# Section 4: Container Images
+## What's in an Image?
+* App binaries and dependencies
+* Metadata about the image data and how to run the image
+* Not a complete OS. No kernel, kernel modules (e.g. drivers). Host provides the kernel.
+## Image Creation and Storage
+* Created Using a Dockerfile Or committing a containers changes back to an image.
+* Usually use a Dockerfile recipe to create them.
+* Images aren't ideal for persistent data
+  * Mount a host file system path into container
+  * Use `docker volume` to create storage for unique/persistent data
+## Image and Layers
+* Images are made up of file system changes and metadata
+* Each layer is uniquely identified and only stored once on a host.
+* A Docker image is built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile.
+* Detailed description of Image and Layers: [link](https://docs.docker.com/v17.09/engine/userguide/storagedriver/imagesandcontainers/)
+* Each line in dockerfile is a layer and order matters. 
+* It is read from a top-down manner.
+* Try to ensure that things that change the most are placed on bottom of your dockerfile and least changed stuff is on top of the file.
+* Docker caches your build steps. It generates a hash after every step in Dockerfile. If the file has not changed then it'll use the existing cached layer.
