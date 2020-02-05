@@ -94,7 +94,52 @@ docker run -it --rm --net=dns-rr centos curl -s search:9200
 * Comprised of 2 things: `YAML` and `docker-compose`
 * There are three main section in YAML file: services, volumes and networks.
 * Services are actually containers. They are called services as you can come up with multiple running versions of a single container.
-```bash
-docker-compose up # setup volumes/networks and start all containers
-docker-compose down # stop all containers and remove cont/vol/net
-```
+ ```bash
+ docker-compose up # setup volumes/networks and start all containers
+ docker-compose down # stop all containers and remove cont/vol/net
+ ```
+
+# Section 7: Swarm Intro
+* Swarm Mode is a clustering solution built inside Docker. Swarm brings in together all the containers which you can then manage them.
+* Not enabled by default to ensure backward compatibility.
+* Manager nodes have a copy of db on them. This db has their config and info they need to work as a Manager node.
+* Manager also encrypt their traffic to ensure integrity.
+* Manager and Worker can be promoted or demoted.
+* Single Swarm "service" can have multiple tasks and each task will launch a container
+* Workers ask Manager for work. Manager gives them work. then evaluates if they are working correctly or not.
+* RAFT ensures consistency across nodes. 
+* Best thing about swarm is you don't need an extra config db to manage your app.
+
+<img width="416" alt="Screen Shot 2020-02-05 at 11 26 07 AM" src="https://user-images.githubusercontent.com/13077629/73866894-40f72400-480b-11ea-99cb-7940d89c00b7.png">
+
+<img width="416" alt="Screen Shot 2020-02-05 at 11 26 24 AM" src="https://user-images.githubusercontent.com/13077629/73866905-45bbd800-480b-11ea-9008-7ba2341c7312.png">
+
+<img width="400" alt="Screen Shot 2020-02-05 at 11 27 16 AM" src="https://user-images.githubusercontent.com/13077629/73866915-4a808c00-480b-11ea-840a-817c18de1ccb.png">
+
+* You need Join Tokens to join a Swarm
+ ```bash
+ Commands Lec 60:
+ We just through our requirements at Swarm and it creates resources for us.
+
+ docker service create alpine ping 8.8.8.8(start alpine image and ask it to ping Google)
+
+ docker service ls(list of all the services running. These are not containers)
+
+ Replica = "1/1" (how many are running/how many you specified to run)
+ Swarm tries to make sure these numbers match.
+
+ docker service ps "name_of_service"(this will give us the name of the container that is running)
+
+ docker service update <service_id> --replicas 3 (this will scale the service)
+ ```
+* If you delete a container that was running a service for Swarm then it will generate a new one.
+ ```bash
+ docker swarm init --advertise-addr=<IP Address>
+ docker node ls
+
+ promote to manager:
+ docker node update --role manager node2
+
+ To get join-token to enter a swarm as manager:
+ docker swarm join-token manager
+ ```
