@@ -95,3 +95,34 @@
 * Orchestration is there to monitor your resources and ensure your changes are automated. So you won't need it if your team is small.
 * Swarm: Easier to deploy/manage
 * Kubernetes: More features and flexibility
+
+# Section 13: K8S install and first pods
+* Kubectl: CLI to configure Kubernetes and manage apps. This is the official way to talk to k8s
+* Node: Single server in the Kubernetes cluster
+* Kubelet: Kubernetes agent running on nodes. This allows the node to talk to the k8s master. Docker had Swarm built in so it didn't need an agent to talk to it
+* Control Plane: Set of containers that manage the cluster. Equivalent to Manager in Swarm. Also called "master".
+* [Kubernetes Components](https://kubernetes.io/docs/concepts/overview/components/#master-components)
+## Kubernetes Container Abstractions
+* In k8s we never deploy container directly but use pods to deploy them.
+* Pod: one or more containers running together on one Node. Basic unit of deployment. Containers are always in pods
+* Controller: For creating/updating pods and other objects. Many types of Controllers inc. Deployment, ReplicaSet, StatefulSet, DaemonSet, Job, CronJob, etc.
+* So controller is a differencing engine that checks wheter pod is doing what you said it should do. 
+* Service: network endpoint to connect to a pod. Service is used by everyone to connect to a pod.
+* Namespace: Filtered group of objects in cluster.
+  ```bash
+  kubectl run #(changing to be only for pod creation)
+  kubectl create #(create some resources via CLI or YAML)
+  kubectl apply #(create/update anything via YAML)
+  # Creating Pods with kubectl
+  kubectl version
+  # Two ways to deploy Pods (containers): Via commands, or via YAML
+  kubectl create deployment my-nginx --image nginx
+  ```
+* **create** command uses a deployment controller creates a replica set controller and then that creates the pod. Therefore our pod name has weird chars at the end.
+<img width="442" alt="Screen Shot 2020-02-06 at 2 44 11 PM" src="https://user-images.githubusercontent.com/13077629/73977063-34e49280-48ef-11ea-9bb6-f44a0daacee9.png">
+
+* Scaling using ReplicaSets:
+  ```bash
+  kubectl scale deploy/my-apache --replicas 2
+  kubectl scale deployment my-apache --replicas 2
+  ```
