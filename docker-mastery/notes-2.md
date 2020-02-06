@@ -45,3 +45,34 @@
 * It is a swarm specific feature and cannot be used without swarm
 * To use secret with stack your version needs to be "3.1" or higher
 * Only stored on disk on Manager nodes.
+
+* **NOTE**: [Difference b/w Docker Stack and Docker Compose](https://vsupalov.com/difference-docker-compose-and-docker-stack/)
+
+# Section 9: Swarm App Lifecycle
+* If you have "docker-compose.yml" and "docker-compose.override.yml" then you run "docker-compose up" it will run former first and then overlay with latter.
+  ```bash
+  docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d
+  ```
+* To run compose in test env. You mention the base compose file first and then test file.
+* There is no such thing as "stack update" you just update service or whatever in backend.
+* Docker Healthchecks
+
+# Section 10: Container Registeries
+* Docker Hub: It's really Docker Registry plus lightweight image building.
+* Private Docker Registry: A private image registry for your network. `docker pull registry` to get started.
+* Secure your Registry with TLS.
+* "Secure by Default": Docker won't talk to registry without HTTPS. Except, localhost (127.0.0.0/8).
+  ```bash
+  # Run the registry image
+  docker container run -d -p 5000:5000 --name registry registry
+  # Re-tag an existing image and push it to your new registry
+  docker tag hello-world 127.0.0.1:5000/hello-world
+  docker push 127.0.0.1:5000/hello-world
+  # Remove that image from local cache and pull it from new registry
+  docker image remove hello-world
+  docker image remove 127.0.0.1:5000/hello-world
+  docker pull 127.0.0.1:5000/hello-world
+  # Re-create registry using a bind mount and see how it stores data
+  docker container run -d -p 5000:5000 --name registry -v $(pwd)/registry-data:/var/lib/registry registry
+  ```
+* Run a Private Docker Registry.
