@@ -76,3 +76,22 @@
   docker container run -d -p 5000:5000 --name registry -v $(pwd)/registry-data:/var/lib/registry registry
   ```
 * Run a Private Docker Registry.
+
+# Section 11: Docker in Prod
+* Good Dockerfiles are more important than fancy orchestration.
+* It's your new build and environment documentation.
+* Anti-Pattern: Not storing unique data in volumes.
+* Anti: Letting image builds pull FROM latest
+* Anti: Letting image builds install latest packages
+* Anti: Not changing defaults in container like you would on a VM
+* Anti: Copying in environment config at image build
+* 3-Node Swarm: Minimum for HA
+* 10-Node Swarm: Separating Out Managers. 5 dedicated managers
+
+# Section 12: What and Why K8S
+* Orchestrator: takes your containers and runs them on your nodes(servers)
+* Container Orchestration = Make many servers act like one
+* Cloud providers will give you kube endpoints which you can use locally.
+* Orchestration is there to monitor your resources and ensure your changes are automated. So you won't need it if your team is small.
+* Swarm: Easier to deploy/manage
+* Kubernetes: More features and flexibility
