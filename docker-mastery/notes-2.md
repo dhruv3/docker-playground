@@ -126,3 +126,36 @@
   kubectl scale deploy/my-apache --replicas 2
   kubectl scale deployment my-apache --replicas 2
   ```
+# Section 14: Exposing K8S ports
+* Exposing Containers: It's about taking your pods and creating a persistant endpoint with which you can talk to. You can expose them internally in the cluster or outside your cluster.
+* `kubectl expose` creates a service for existing pods. A **service** is a stable address for pod(s).
+* CoreDNS allows us to resolve services by name.
+* There are different types of services
+  * ClusterIP (default)
+  * NodePort
+  * LoadBalancer
+  * ExternalName
+* **ClusterIP**: It's only about one set of pods in a cluster talking to another set of pods in the same cluster. So it's only good in a cluster and that's it.
+* **NodePort**: High port allocated on each node. Port is open on every node’s IP.
+* **LoadBalancer**: Creates NodePort+ClusterIP services, tells LB to send to NodePort. Only available when infra provider gives you a LB (AWS ELB). It gives kuber the ability to talk to external links.
+* **ExternalName**: Not used for Pods, but for giving pods a DNS name to use for something outside Kubernetes.
+  ```bash
+  # Create a ClusterIP service
+  kubectl expose deployment/httpenv --port 8888
+  ```
+* Creates a ClusterIP service. running this command does not affect the pods. it will create a ClusterIP service in front of the pod. 
+  ```bash
+  # Inspecting ClusterIP Service
+  kubectl run --generator=run-pod/v1 tmp-shell --rm -it --image bretfisher/netshoot -- bash
+  curl httpenv:8888
+  ```
+* **generator**: it is the template we want run command to use. We are using "run-pod" template. " -- " run whatever command is present after this "double dash". "tmp-shell" it is the part of DNS name for this service.
+  ```bash
+  # Create a NodePort Service
+  kubectl expose deployment/httpenv --port 8888 --name httpenvnp --type NodePort
+  ```
+  ```bash
+  # Add a LoadBalancer Service
+  kubectl expose deployment/httpenv --port 8888 --name httpenvlb --type LoadBalancer 
+  curl localhost:8888
+  ```
