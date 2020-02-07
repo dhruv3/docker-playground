@@ -159,3 +159,15 @@
   kubectl expose deployment/httpenv --port 8888 --name httpenvlb --type LoadBalancer 
   curl localhost:8888
   ```
+# Section 15: K8S Management Techniques
+* Helper templates called "generators".
+* Every resource in Kubernetes has a specification or "spec".
+  ```bash
+  kubectl create deployment sample --image nginx --dry-run -o yaml
+  ```
+* You can output those templates with `--dry-run -o yaml`
+  ```bash
+  kubectl create job test --image nginx --dry-run -o yaml
+  ```
+* Used for creating pods that will only run once.
+<img width="1084" alt="Screen Shot 2020-02-07 at 12 43 29 PM" src="https://user-images.githubusercontent.com/13077629/74056397-8f412a00-49a7-11ea-9535-ce6d72e13581.png">
