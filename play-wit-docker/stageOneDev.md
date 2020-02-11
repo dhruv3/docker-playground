@@ -69,7 +69,7 @@ cd linkextractor
 git checkout demo
 ```
 * Clone and checkout `demo` branch.
-## Step 0: Basic Link Extractor Script
+### Step 0: Basic Link Extractor Script
 ```bash
 git checkout step0
 tree
@@ -88,11 +88,11 @@ docker image build -t linkextractor:step1 .
 * This builds image from Dockerfile.
 * This image should have all the necessary ingredients packaged in it to run the script anywhere on a machine that supports Docker.
 
-## Step 2: Link Extractor Module with Full URI and Anchor Text
+### Step 2: Link Extractor Module with Full URI and Anchor Text
 * Updated python script that does a lot more things.
 * So far, we have learned how to containerize a script with its necessary dependencies to make it more portable. 
 
-## Step 3: Link Extractor API Service
+### Step 3: Link Extractor API Service
 ```docker
 COPY       *.py /app/
 RUN        chmod a+x *.py
@@ -103,7 +103,7 @@ docker container run -d -p 5000:5000 --name=linkextractor linkextractor:step3
 ```
 * We are mapping the port 5000 of the container with the 5000 of the host (using `-p 5000:5000` argument) to make it accessible from the host. We are also assigning a name (`--name=linkextractor`) to the container to make it easier to see logs and kill or remove the container.
 
-## Step 4: Link Extractor API and Web Front End Services
+### Step 4: Link Extractor API and Web Front End Services
 * Two containers are run in this step.
 * For the two containers to be able to talk to each other, we can either map their ports on the host machine and use that for request routing or we can place the containers in a single private network and access directly. 
 * Docker network containers identify themselves using their names as hostnames to avoid hunting for their IP addresses in the private network.
@@ -129,12 +129,31 @@ services:
 * `api:5000` is being used because we will have a dynamic hostname entry in the private network for the API service matching its service name.
 * `/var/www/html`: is the default web root for the Apache web server.
 
-## Step 5: Redis Service for Caching
+### Step 5: Redis Service for Caching
 ```bash
 docker-compose exec redis redis-cli monitor
 ```
 * We can use `docker-compose exec` followed by the redis service name and the Redis CLI’s monitor command.
 * Redis assigns key value pair to store stuff.
 
-## Step 6: Swap Python API Service with Ruby
+### Step 6: Swap Python API Service with Ruby
 * In a microservice architecture application swapping components with an equivalent one is easy as long as the expectations of consumers of the component are maintained.
+
+## Deploying a Multi-Service App in Docker Swarm Mode
+* Deploy a stack (multi services application) against a Swarm using a docker compose file.
+```bash
+docker swarm init --advertise-addr $(hostname -i)
+```
+* Create a Docker Swarm first.
+```bash
+docker stack deploy --compose-file=docker-stack.yml voting_stack
+```
+* A stack is a group of services that are deployed together. The `docker-stack.yml` in the current folder will be used to deploy the voting app as a stack.
+```bash
+docker stack services voting_stack
+```
+* Check the service within the stack.
+```bash
+docker service ps voting_stack_vote
+```
+* List the tasks of the vote service.
