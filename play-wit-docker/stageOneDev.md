@@ -60,3 +60,81 @@ docker container top mydb
  docker exec -it mydb sh
  ```
  
+ ## Application Containerization and Microservice Orchestration
+ * We will utilize Docker Compose for orchestration during the development.
+ ### Step -1: Stage Setup
+ ```bash
+git clone https://github.com/ibnesayeed/linkextractor.git
+cd linkextractor
+git checkout demo
+```
+* Clone and checkout `demo` branch.
+## Step 0: Basic Link Extractor Script
+```bash
+git checkout step0
+tree
+```
+* Checkout the step0 branch and list files in it.
+```bash
+ls -l linkextractor.py
+```
+* Check the permissions on a file. If `x` flag is missin => file is not executable as a script(it can run as a python program).
+## Step 1: Containerized Link Extractor Script
+* We'll see the benefits of container in this step!
+* Using a `Dockerfile` we can prepare a Docker image for this script.
+```bash
+docker image build -t linkextractor:step1 .
+```
+* This builds image from Dockerfile.
+* This image should have all the necessary ingredients packaged in it to run the script anywhere on a machine that supports Docker.
+
+## Step 2: Link Extractor Module with Full URI and Anchor Text
+* Updated python script that does a lot more things.
+* So far, we have learned how to containerize a script with its necessary dependencies to make it more portable. 
+
+## Step 3: Link Extractor API Service
+```docker
+COPY       *.py /app/
+RUN        chmod a+x *.py
+```
+* Making a script executable.
+```bash
+docker container run -d -p 5000:5000 --name=linkextractor linkextractor:step3
+```
+* We are mapping the port 5000 of the container with the 5000 of the host (using `-p 5000:5000` argument) to make it accessible from the host. We are also assigning a name (`--name=linkextractor`) to the container to make it easier to see logs and kill or remove the container.
+
+## Step 4: Link Extractor API and Web Front End Services
+* Two containers are run in this step.
+* For the two containers to be able to talk to each other, we can either map their ports on the host machine and use that for request routing or we can place the containers in a single private network and access directly. 
+* Docker network containers identify themselves using their names as hostnames to avoid hunting for their IP addresses in the private network.
+```docker
+version: '3'
+
+services:
+  api:
+    image: linkextractor-api:step4-python
+    build: ./api
+    ports:
+      - "5000:5000"
+  web:
+    image: php:7-apache
+    ports:
+      - "80:80"
+    environment:
+      - API_ENDPOINT=http://api:5000/api/
+    volumes:
+      - ./www:/var/www/html
+```      
+* We will supply an environment variable named API_ENDPOINT with the value http://api:5000/api/
+* `api:5000` is being used because we will have a dynamic hostname entry in the private network for the API service matching its service name.
+* `/var/www/html`: is the default web root for the Apache web server.
+
+## Step 5: Redis Service for Caching
+```bash
+docker-compose exec redis redis-cli monitor
+```
+* We can use `docker-compose exec` followed by the redis service name and the Redis CLI’s monitor command.
+* Redis assigns key value pair to store stuff.
+
+## Step 6: Swap Python API Service with Ruby
+* In a microservice architecture application swapping components with an equivalent one is easy as long as the expectations of consumers of the component are maintained.
