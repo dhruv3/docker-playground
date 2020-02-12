@@ -36,3 +36,18 @@ docker container run hello:v0.1
 
 * Another important note about layers: each layer is immutable. As an image is created and successive layers are added, the new layers keep track of the changes from the layer below. When you start the container running there is an additional layer used to keep track of any changes that occur as the application runs (like the “hello.txt” file we created in the earlier exercises). 
 * This design principle is important for both security and data management. If someone mistakenly or maliciously changes something in a running container, you can very easily revert back to its original state because the base layers cannot be changed.
+
+# Swarm Mode Introduction for IT Pros
+[Source](https://training.play-with-docker.com/ops-s1-swarm-intro/)
+
+* Compose vs Swarm
+ * **Compose** is used to control multiple containers on a single system. Much like the Dockerfile we looked at to build an image, there is a text file that describes the application: which images to use, how many instances, the network connections, etc. But Compose only runs on a single system and is much simpler.
+ * **Swarm Mode** tells Docker that you will be running many Docker engines and you want to coordinate operations across all of them. Swarm mode combines the ability to not only define the application architecture, like Compose, but to define and maintain high availability levels, scaling, load balancing, and more. With all this functionality, Swarm mode is used more often in production environments.
+
+```bash
+docker swarm init --advertise-addr $(hostname -i)
+```
+* It creates Swarm manager and it is listening on the IP address returned by the (hostname -i) command. 
+* A **stack** is a group of **services** that are deployed together: multiple containerized components of an application that run in separate instances. Each individual service can actually be made up of one or more containers, called **tasks** and then all the tasks & services together make up a stack.
+* As with Dockerfiles and the Compose files, the file that defines a stack is a plain text file that is easy to edit and track.
+* The Docker engine is intelligent enough to automatically load balance between multiple replicas using built-in load balancers.
