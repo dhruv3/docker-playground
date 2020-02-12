@@ -9,5 +9,30 @@
 
 # Doing More With Docker Images
 [Source](https://training.play-with-docker.com/ops-s1-images/)
+## Creating Image using COMMIT
+```bash
+docker container diff <container ID>
+```
+* You should see a list of all the files that were added or changed to in the container when you installed figlet.
+```bash
+docker container commit CONTAINER_ID
+```
+* To create an image we need to “commit” this container. Commit creates an image locally on the system running the Docker engine.
+* We can create a container, add all the libraries and binaries in it and then commit it in order to create an image.
+## Creating Image using DOCKERFILE
 
-* 
+<img width="697" alt="Screen Shot 2020-02-12 at 12 17 17 PM" src="https://user-images.githubusercontent.com/13077629/74364180-a1e5a580-4d91-11ea-977c-7a30115af6f2.png">
+
+```bash
+docker image build -t hello:v0.1 .
+```
+* Build a image using Dockerfile
+```bash
+docker container run hello:v0.1
+```
+* Start the container 
+
+<img width="679" alt="Screen Shot 2020-02-12 at 12 36 46 PM" src="https://user-images.githubusercontent.com/13077629/74365775-5a144d80-4d94-11ea-9b59-a38188477271.png">
+
+* Another important note about layers: each layer is immutable. As an image is created and successive layers are added, the new layers keep track of the changes from the layer below. When you start the container running there is an additional layer used to keep track of any changes that occur as the application runs (like the “hello.txt” file we created in the earlier exercises). 
+* This design principle is important for both security and data management. If someone mistakenly or maliciously changes something in a running container, you can very easily revert back to its original state because the base layers cannot be changed.
