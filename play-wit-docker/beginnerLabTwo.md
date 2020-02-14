@@ -33,3 +33,17 @@ docker container run ping:v0.1 8.8.8.8
 * [/var Dir](http://www.linfo.org/var.html)
 * [/var Dir doubt](https://askubuntu.com/questions/574609/why-do-i-not-see-my-bin-var-etc-directories-in-my-root-partition)
 * `/var/lib/docker/overlay2` folder where the image and container layers are stored.
+
+# Docker Volumes
+[Source](https://training.play-with-docker.com/docker-volumes/)
+## Data persistency without a volume?
+```bash
+docker container run --name c1 -ti alpine sh
+mkdir /data && cd /data && touch hello.txt
+exit
+docker container inspect c1
+ls /var/lib/docker/overlay2/[YOUR_ID]/diff/data
+docker container rm c1
+```
+* We created a data folder and placed hello.txt file inside. Then removed container and checked if the data folder still exits(It wasn't there).
+## Defining a volume in a Dockerfile
